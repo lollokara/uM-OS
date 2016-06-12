@@ -45,6 +45,7 @@ float ReadADC(float PreviousValue);
 void displayBar(float Value,int Range);
 char *GetIP();
 
+const char *Config_dir="/home/root/uM_Conf.cfg";
 
 edOLED oled;
 gpio BUTTON_UP(47, INPUT);
@@ -305,6 +306,38 @@ char *GetIP(){
 	char *Cropped= (inet_ntoa(( (struct sockaddr_in *)&ifr.ifr_addr )->sin_addr) );
 	Cropped+=4;
 	return (Cropped);
+}
+
+bool readConf(int Index){
+	config_t cfg;
+	config_setting_t *setting;
+	const char *str;
+	config_init(&cfg);
+	config_read_file(&cfg, Config_dir);
+	if(config_lookup_string(&cfg, "name", &str)) printf("CFG name: %s\n\n", str);
+	setting = config_lookup(&cfg, "wifi_sett.AP");
+	config_setting_t *AP = config_setting_get_elem(setting, 0);
+	int Active;
+	if(Index==0) config_setting_lookup_int(AP, "status", &Active);
+	else config_setting_lookup_int(AP, "wifi", &Active);
+	return(Active);
+}
+void WriteConf(int Value1, int Value2){
+	config_t cfg;
+	config_setting_t *setting,*root;
+	config_init(&cfg);
+	config_read_file(&cfg, Config_dir);
+	root = config_root_setting(&cfg);
+	setting = config_setting_get_member(root, "wifi_sett");
+	setting = config_setting_get_member(setting, "AP");
+	config_setting_t *AP = config_setting_get_elem(setting, 0);
+	AP = config_setting_lookup(AP,"status");
+	config_setting_set_int(AP, Value1);
+	AP = config_setting_get_elem(setting, 0);
+	AP = config_setting_lookup(AP,"wifi");
+	config_setting_set_int(AP, Value2);
+	config_write_file(&cfg, Config_dir);
+	config_destroy(&cfg);
 }
 
 void WifiSett(){
