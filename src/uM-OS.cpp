@@ -17,20 +17,6 @@
 #define BoxSizey		11
 #define MAXPOS			4
 #define MAXPAGE			1
-/*
-#include <string.h>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-#include <unistd.h>
-
-#include <array>
-
-#include <cstdio>
-#include <memory>
-*/
-
 
 
 using namespace std;
