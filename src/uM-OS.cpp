@@ -17,7 +17,6 @@
 #define BoxSizey		11
 #define MAXPOS			4
 #define MAXPAGE			1
-// For WiFi
 /*
 #include <string.h>
 #include <iostream>
